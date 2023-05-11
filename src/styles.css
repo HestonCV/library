@@ -43,6 +43,20 @@ h1 {
   background-color: rgb(73, 129, 193);
 }
 
+.span-container {
+  display: flex;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+  height: 50px;
+  width: 80%;
+  border-radius: 10px;
+  padding-left: 10px;
+}
+.side-bar-content {
+  font-size: 1.65rem;
+  color: rgb(84, 84, 84);
+}
+
 /* Add Book Modal Styles */
 .add-book-modal {
   display: none;
@@ -89,11 +103,15 @@ input {
   width: 45%;
   height: 35px;
   margin-left: 10px;
-  border: 1px solid black;
+  border: 1px solid rgb(133, 133, 133);
   border-radius: 10px;
   padding-left: 10px;
 
   font-size: 1.5rem;
+}
+
+#read {
+  width: 5%;
 }
 
 #pages {
@@ -113,26 +131,60 @@ input {
   background-color: none;
 }
 
-span {
-  font-size: 1.65rem;
-  color: rgb(237, 237, 237);
-}
-
 /* Book Card Styles */
 .large-books-container {
   display: grid;
   grid-template-columns: 1rf;
-  padding: 0 15%;
+  padding: 0 20%;
   overflow: scroll;
-  max-height: calc(100vh - 80px - 90px);
+  max-height: calc(100vh - 80px);
 }
 .large-book {
   border-radius: 10px;
-  background-color: rgb(243, 243, 243);
+  background-color: rgb(246, 246, 246);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.375);
-  height: 600px;
   margin-bottom: 40px;
   margin-top: 50px;
+  padding: 30px;
+
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: rgb(84, 84, 84);
+  margin: 0;
+}
+
+.author {
+  font-size: 1.7rem;
+  font-style: italic;
+  color: rgb(84, 84, 84);
+  margin: 0;
+  margin-top: 25px;
+}
+
+.pages {
+  font-size: 1.7rem;
+  color: rgb(84, 84, 84);
+  margin: 0;
+  margin-top: 25px;
+}
+
+.summary-title {
+  font-size: 2rem;
+  color: rgb(84, 84, 84);
+  margin: 0;
+  margin-top: 30px;
+}
+
+.summary {
+  font-size: 1.9rem;
+  color: rgb(84, 84, 84);
+  margin: 0;
+  margin-top: 20px;
+  text-indent: 50px;
+  text-align: left;
 }
 
 /* Button Styles */
