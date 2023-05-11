@@ -1,0 +1,147 @@
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-rows: 80px 1fr;
+
+  font-family: "Josefin Sans", sans-serif;
+}
+
+/* Header Styles */
+.header {
+  margin: 0;
+  padding: 0 5%;
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(236, 236, 236);
+
+  box-shadow: 0 4px 2px rgba(0, 0, 0, 0.375);
+}
+
+h1 {
+  margin: auto 0;
+  color: rgb(84, 84, 84);
+}
+
+/* Content Styles */
+
+.content-container {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+}
+
+/* Content Left */
+
+.content-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10%;
+
+  padding-left: max(20px, 7%);
+  padding-top: 75px;
+
+  background-color: rgb(73, 129, 193);
+  box-shadow: 4px 0 2px rgba(0, 0, 0, 0.375);
+}
+
+/* Add Book Modal Styles */
+.add-book-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+
+  background-color: rgba(0, 0, 0, 0.41);
+}
+.book-info {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 70%;
+  width: 45%;
+  padding: 100px;
+
+  background-color: white;
+  border-radius: 20px;
+}
+
+#book-info-header {
+  font-size: 3rem;
+  margin-bottom: 55px;
+}
+
+/* Form Styles */
+form {
+  font-size: 2rem;
+}
+
+section > div {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 90px;
+}
+
+input {
+  width: 45%;
+  height: 35px;
+  margin-left: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding-left: 10px;
+
+  font-size: 1.5rem;
+}
+
+#pages {
+  width: 15%;
+}
+
+/* content-right */
+
+.content-right {
+  display: grid;
+  grid-template-rows: 90px 1fr;
+}
+
+.add-book-container {
+  display: flex;
+  justify-content: center;
+}
+
+span {
+  font-size: 1.65rem;
+  color: rgb(237, 237, 237);
+}
+
+/* Button Styles */
+
+button {
+  margin: auto 0;
+  border-radius: 10px;
+  height: 50px;
+  width: 150px;
+
+  background-color: rgb(73, 129, 193);
+  color: rgb(237, 237, 237);
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.375);
+}
+
+button:hover {
+  background-color: rgb(78, 142, 214);
+  transform: scale(1.02);
+}
+
+button:active {
+  background-color: rgb(78, 142, 214);
+  transform: scale(0.98);
+  box-shadow: none;
+}
