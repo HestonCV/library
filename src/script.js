@@ -1,4 +1,23 @@
 const books = [];
+
+function updateSideBar() {
+  const totalBooksDisplay = document.getElementById("total-books");
+  const totalPagesDisplay = document.getElementById("total-pages");
+  /*  const percentBooksReadDisplay = document.getElementById("percent-books-read");
+  const percentPagesReadDisplay = document.getElementById("percent-pages-read");
+ */
+  // update total books
+  const totalBooks = books.length;
+  totalBooksDisplay.textContent = `Total Books: ${totalBooks}`;
+
+  // update total
+  const totalPages = books.reduce(
+    (sum, book) => sum + parseInt(book.pages, 10),
+    0
+  );
+  totalPagesDisplay.textContent = `Total Pages: ${totalPages}`;
+}
+
 function deleteBookCard(id) {
   const deleteButton = document.getElementById(`${id}`);
   deleteButton.parentNode.remove();
@@ -24,6 +43,7 @@ function addBookCard(book) {
   bookCard.appendChild(deleteButton);
   deleteButton.addEventListener("click", () => {
     deleteBookCard(deleteButton.id);
+    updateSideBar();
   });
 
   // add title info
@@ -58,24 +78,6 @@ function addBookCard(book) {
 
   const booksContainer = document.getElementById("books-container");
   booksContainer.appendChild(bookCard);
-}
-
-function updateSideBar() {
-  const totalBooksDisplay = document.getElementById("total-books");
-  const totalPagesDisplay = document.getElementById("total-pages");
-  /*  const percentBooksReadDisplay = document.getElementById("percent-books-read");
-  const percentPagesReadDisplay = document.getElementById("percent-pages-read");
- */
-  // update total books
-  const totalBooks = books.length;
-  totalBooksDisplay.textContent = `Total Books: ${totalBooks}`;
-
-  // update total
-  const totalPages = books.reduce(
-    (sum, book) => sum + parseInt(book.pages, 10),
-    0
-  );
-  totalPagesDisplay.textContent = `Total Pages: ${totalPages}`;
 }
 
 function Book(id, title, author, pages, summary, read = false) {
@@ -137,3 +139,25 @@ form.addEventListener("submit", (e) => {
   const book = new Book(id, title, author, pages, summary, read);
   book.addBook();
 });
+
+function addPlaceholderBook() {
+  const hobbit = new Book(
+    0,
+    "The Hobbit",
+    "J.R.R Tolkien",
+    "304",
+    `'The Hobbit' is a timeless fantasy novel by J.R.R. Tolkien. It
+    follows the adventure of Bilbo Baggins, a humble and unassuming
+    hobbit, who is unexpectedly swept into an epic quest by the wizard
+    Gandalf and a group of dwarves. Their mission: to reclaim a lost
+    dwarf kingdom and its treasure from the fearsome dragon Smaug.
+    Along the journey, Bilbo encounters many trials and creatures of
+    Middle-Earth, and discovers his own unexpected bravery and
+    cunning. It's a story of adventure, friendship, and personal
+    growth in a world filled with magic and mystery.`,
+    true
+  );
+  hobbit.addBook();
+}
+
+addPlaceholderBook();
