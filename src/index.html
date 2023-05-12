@@ -37,11 +37,13 @@
               <label for="summary">Summary</label>
               <input type="text" name="summary" id="summary" />
             </div>
-            <div>
-              <label for="read">Read</label>
-              <input type="checkbox" name="read" id="read" />
+            <div id="last-row">
+              <div class="read">
+                <label for="read" id="read-label">Read</label>
+                <input type="checkbox" name="read" id="read" />
+              </div>
+              <button type="submit">Submit</button>
             </div>
-            <button type="submit">Submit</button>
           </section>
         </form>
       </div>
@@ -73,6 +75,7 @@
         <div class="large-books-container" id="books-container">
           <button id="add-book">+ Add Book</button>
           <div class="large-book">
+            <button class="delete-book"><span>-</span></button>
             <p class="title">The Hobbit</p>
             <p class="author">By J.R.R Tolkien</p>
             <p class="pages">Page Count: 304</p>

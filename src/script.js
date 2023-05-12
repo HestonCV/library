@@ -1,8 +1,31 @@
 const books = [];
+function deleteBookCard(id) {
+  const deleteButton = document.getElementById(`${id}`);
+  deleteButton.parentNode.remove();
+  for (let i = 0; i < books.length; i += 1) {
+    if (books[i].id === parseInt(id, 10)) {
+      books.splice(i, 1);
+      return;
+    }
+  }
+}
 
 function addBookCard(book) {
   const bookCard = document.createElement("div");
   bookCard.classList.add("large-book");
+
+  // add delete button
+  const deleteButton = document.createElement("button");
+  deleteButton.classList.add("delete-book");
+  deleteButton.id = book.id;
+  const deleteButtonSpan = document.createElement("span");
+  deleteButtonSpan.textContent = "-";
+  deleteButton.appendChild(deleteButtonSpan);
+  bookCard.appendChild(deleteButton);
+  deleteButton.addEventListener("click", () => {
+    deleteBookCard(deleteButton.id);
+  });
+
   // add title info
   const title = document.createElement("p");
   title.classList.add("title");
@@ -55,11 +78,6 @@ function updateSideBar() {
   totalPagesDisplay.textContent = `Total Pages: ${totalPages}`;
 }
 
-function updatePage(book) {
-  addBookCard(book);
-  updateSideBar();
-}
-
 function Book(id, title, author, pages, summary, read = false) {
   this.id = id;
   this.title = title;
@@ -71,7 +89,8 @@ function Book(id, title, author, pages, summary, read = false) {
 
 Book.prototype.addBook = function () {
   books.push(this);
-  updatePage(this);
+  addBookCard(this);
+  updateSideBar();
 };
 
 const modal = document.querySelector(".add-book-modal");
@@ -100,6 +119,8 @@ form.addEventListener("submit", (e) => {
   const author = document.getElementById("author").value;
   const pages = document.getElementById("pages").value;
   const summary = document.getElementById("summary").value;
+  let read = document.getElementById("read").value;
+  read = read === "on";
   let id = books.length;
   // eslint-disable-next-line no-loop-func
   while (books.some((book) => book.id === id)) {
@@ -112,8 +133,7 @@ form.addEventListener("submit", (e) => {
     input.value = "";
   });
   modal.style.display = "none";
-
-  const book = new Book(id, title, author, pages, summary);
-  console.log(title, author, pages, summary);
+  console.log(id, title, author, pages, summary, read);
+  const book = new Book(id, title, author, pages, summary, read);
   book.addBook();
 });
