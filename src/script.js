@@ -29,6 +29,12 @@ function deleteBookCard(id) {
   }
 }
 
+function clearLibrary() {
+  for (let i = 0; i < books.length; i += 1) {
+    deleteBookCard(books[i].id);
+  }
+}
+
 function addBookCard(book) {
   const bookCard = document.createElement("div");
   bookCard.classList.add("large-book");
@@ -106,6 +112,10 @@ bookInfo.addEventListener("click", (e) => {
 });
 
 const clearLibraryButton = document.querySelector("#clear-library");
+clearLibraryButton.addEventListener("click", () => {
+  clearLibrary();
+  updateSideBar();
+});
 
 const addBookButton = document.querySelector("#add-book");
 addBookButton.addEventListener("click", () => {
