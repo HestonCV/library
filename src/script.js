@@ -7,7 +7,7 @@ class Book {
     this.author = author;
     this.pages = parseInt(pages, 10);
     this.summary = summary;
-    this.read = read === "on";
+    this.read = read;
     this.card = card;
   }
 }
@@ -63,19 +63,50 @@ class UIController {
       author.value,
       pages.value,
       summary.value,
-      read.value
+      read.checked
     );
   }
 
-  updateTotalPagesDisplay() {}
+  updateTotalBooksDisplay() {
+    const totalBooksDisplay = document.getElementById("total-books");
+    totalBooksDisplay.textContent = `Total Books: ${this.Library.totalBooks}`;
+  }
 
-  updateTotalBooksDisplay() {}
+  updateTotalPagesDisplay() {
+    const totalPagesDisplay = document.getElementById("total-pages");
+    totalPagesDisplay.textContent = `Total Pages: ${this.Library.totalPages}`;
+  }
 
-  updatePercentBooksReadDisplay() {}
+  updatePercentBooksReadDisplay() {
+    const percentBooksReadDisplay =
+      document.getElementById("percent-books-read");
+    if (this.Library.totalBooks === 0) {
+      percentBooksReadDisplay.textContent = "Percent Books Read: 100%";
+      return;
+    }
+    const percentBooksRead =
+      (this.Library.totalBooksRead / this.Library.totalBooks) * 100;
+    percentBooksReadDisplay.textContent = `Percent Books Read: ${percentBooksRead}%`;
+  }
 
-  updatePercentPagesReadDisplay() {}
+  updatePercentPagesReadDisplay() {
+    const percentPagesReadDisplay =
+      document.getElementById("percent-pages-read");
+    if (this.Library.totalPages === 0) {
+      percentPagesReadDisplay.textContent = "Percent Pages Read: 100%";
+      return;
+    }
+    const percentPagesRead =
+      (this.Library.totalPagesRead / this.Library.totalPages) * 100;
+    percentPagesReadDisplay.textContent = `Percent Books Read: ${percentPagesRead}%`;
+  }
 
-  updateSideBar() {}
+  updateSideBar() {
+    this.updateTotalBooksDisplay();
+    this.updateTotalPagesDisplay();
+    this.updatePercentBooksReadDisplay();
+    this.updatePercentPagesReadDisplay();
+  }
 
   addCard(info) {
     // returns a new created element for manipulating DOM
@@ -134,6 +165,30 @@ class Library {
     this.UIController = new UIController(this);
   } // end constructor
 
+  get totalBooks() {
+    return this.books.length;
+  }
+
+  get totalBooksRead() {
+    let numBooksRead = 0;
+    for (let i = 0; i < this.books.length; i += 1) {
+      if (this.books[i].read === true) {
+        numBooksRead += 1;
+      }
+    }
+    return numBooksRead;
+  }
+
+  get totalPagesRead() {
+    let numPagesRead = 0;
+    for (let i = 0; i < this.books.length; i += 1) {
+      if (this.books[i].read === true) {
+        numPagesRead += this.books[i].pages;
+      }
+    }
+    return numPagesRead;
+  }
+
   addBook(title, author, pages, summary, read) {
     // create new book
     const info = { title, author, pages, summary, read };
@@ -151,6 +206,9 @@ class Library {
 
     // add new book to books
     this.books.push(newBook);
+
+    // update UI
+    this.UIController.updateSideBar();
   } // end addBook
 
   removeBook(bookCard) {
@@ -163,6 +221,9 @@ class Library {
         this.books.splice(i, 1);
       }
     }
+
+    // update UI
+    this.UIController.updateSideBar();
   } // end removeBook
 
   clearLibrary() {
@@ -173,6 +234,7 @@ class Library {
       this.removeBook(tempBooks[i].card);
       UIController.removeCard(tempBooks[i].card);
     }
+    this.UIController.updateSideBar();
   }
 }
 
@@ -205,5 +267,5 @@ dwarf kingdom and its treasure from the fearsome dragon Smaug. Along the journey
 Bilbo encounters many trials and creatures of Middle-Earth, and discovers his own
 unexpected bravery and cunning. It's a story of adventure, friendship, and
 personal growth in a world filled with magic and mystery.`,
-  true
+  false
 );
