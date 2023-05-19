@@ -70,7 +70,7 @@ h1 {
   background-color: rgba(0, 0, 0, 0.41);
 }
 .book-info {
-  position: fixed;
+  position: relative;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -85,6 +85,15 @@ h1 {
 #book-info-header {
   font-size: 3rem;
   margin-bottom: 55px;
+}
+
+#close-modal {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+
+  cursor: pointer;
+  font-size: 2rem;
 }
 
 /* Form Styles */

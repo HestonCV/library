@@ -1,173 +1,209 @@
-const books = [];
+/* eslint-disable max-classes-per-file */
+/* eslint-disable  no-underscore-dangle */
 
-function updateSideBar() {
-  const totalBooksDisplay = document.getElementById("total-books");
-  const totalPagesDisplay = document.getElementById("total-pages");
-  /*  const percentBooksReadDisplay = document.getElementById("percent-books-read");
-  const percentPagesReadDisplay = document.getElementById("percent-pages-read");
- */
-  // update total books
-  const totalBooks = books.length;
-  totalBooksDisplay.textContent = `Total Books: ${totalBooks}`;
-
-  // update total
-  const totalPages = books.reduce(
-    (sum, book) => sum + parseInt(book.pages, 10),
-    0
-  );
-  totalPagesDisplay.textContent = `Total Pages: ${totalPages}`;
+class Book {
+  constructor(title, author, pages, summary, read, card) {
+    this.title = title;
+    this.author = author;
+    this.pages = parseInt(pages, 10);
+    this.summary = summary;
+    this.read = read === "on";
+    this.card = card;
+  }
 }
 
-function deleteBookCard(id) {
-  const deleteButton = document.getElementById(`${id}`);
-  deleteButton.parentNode.remove();
-  for (let i = 0; i < books.length; i += 1) {
-    if (books[i].id === parseInt(id, 10)) {
-      books.splice(i, 1);
-      return;
+class UIController {
+  constructor(library) {
+    this.Library = library;
+    this.container = document.getElementById("books-container");
+    this.initEventListeners();
+  }
+
+  initEventListeners() {
+    // clear library button
+    const clearLibraryButton = document.getElementById("clear-library");
+    clearLibraryButton.addEventListener("click", () => {
+      this.Library.clearLibrary();
+    });
+
+    // add book button and modal
+    const addBookButton = document.getElementById("add-book");
+    const addBookModal = document.querySelector(".add-book-modal");
+    addBookButton.addEventListener("click", () => {
+      addBookModal.style.display = "flex";
+    });
+    addBookModal.addEventListener("click", (e) => {
+      if (e.target === addBookModal) {
+        addBookModal.style.display = "none";
+      }
+    });
+    const closeModalButton = document.getElementById("close-modal");
+    closeModalButton.addEventListener("click", () => {
+      addBookModal.style.display = "none";
+    });
+
+    const form = document.querySelector("form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      this.processFormInfo();
+      form.reset();
+      addBookModal.style.display = "none";
+    });
+  }
+
+  processFormInfo() {
+    const title = document.getElementById("title");
+    const author = document.getElementById("author");
+    const pages = document.getElementById("pages");
+    const summary = document.getElementById("summary");
+    const read = document.getElementById("read");
+
+    this.Library.addBook(
+      title.value,
+      author.value,
+      pages.value,
+      summary.value,
+      read.value
+    );
+  }
+
+  updateTotalPagesDisplay() {}
+
+  updateTotalBooksDisplay() {}
+
+  updatePercentBooksReadDisplay() {}
+
+  updatePercentPagesReadDisplay() {}
+
+  updateSideBar() {}
+
+  addCard(info) {
+    // returns a new created element for manipulating DOM
+    function createElement(element, className, textContent) {
+      const newElement = document.createElement(element);
+      if (className) newElement.classList.add(className);
+      newElement.textContent = textContent;
+      return newElement;
+    }
+
+    // appends a list of elements to a parent
+    function appendElementsToCard(elements, parent) {
+      for (let i = 0; i < elements.length; i += 1) {
+        parent.appendChild(elements[i]);
+      }
+    }
+
+    // create card
+    const bookCard = createElement("div", "large-book", "");
+
+    // create delete button and add event listener
+    const deleteButton = createElement("button", "delete-book", "-");
+    deleteButton.addEventListener("click", (e) => {
+      // get the parent of the clicked button and remove the card
+      const card = e.target.parentNode;
+      UIController.removeCard(card);
+      this.Library.removeBook(card);
+    });
+
+    const title = createElement("p", "title", info.title);
+    const author = createElement("p", "author", `By ${info.author}`);
+    const pages = createElement("p", "pages", `Page Count: ${info.pages}`);
+    const summaryHeader = createElement("p", "summary-title", "Summary");
+    const summary = createElement("p", "summary", info.summary);
+
+    appendElementsToCard(
+      [deleteButton, title, author, pages, summaryHeader, summary],
+      bookCard
+    );
+
+    // append card to card container
+    this.container.appendChild(bookCard);
+
+    return bookCard;
+  }
+
+  static removeCard(bookCard) {
+    bookCard.remove();
+  }
+}
+
+class Library {
+  constructor() {
+    this.books = [];
+    this.totalPages = 0;
+    this.UIController = new UIController(this);
+  } // end constructor
+
+  addBook(title, author, pages, summary, read) {
+    // create new book
+    const info = { title, author, pages, summary, read };
+    const newBook = new Book(
+      title,
+      author,
+      pages,
+      summary,
+      read,
+      this.UIController.addCard(info)
+    );
+
+    // update total pages
+    this.totalPages += parseInt(newBook.pages, 10);
+
+    // add new book to books
+    this.books.push(newBook);
+  } // end addBook
+
+  removeBook(bookCard) {
+    for (let i = 0; i < this.books.length; i += 1) {
+      if (this.books[i].card === bookCard) {
+        // subtract pages from total
+        this.totalPages -= this.books[i].pages;
+
+        // remove book from books
+        this.books.splice(i, 1);
+      }
+    }
+  } // end removeBook
+
+  clearLibrary() {
+    // copy this.books so that the for loop is not
+    // out of order as it deletes the books
+    const tempBooks = this.books.map((book) => book);
+    for (let i = 0; i < tempBooks.length; i += 1) {
+      this.removeBook(tempBooks[i].card);
+      UIController.removeCard(tempBooks[i].card);
     }
   }
 }
 
-function clearLibrary() {
-  for (let i = 0; i < books.length; i += 1) {
-    deleteBookCard(books[i].id);
-  }
-}
+const library = new Library();
 
-function addBookCard(book) {
-  const bookCard = document.createElement("div");
-  bookCard.classList.add("large-book");
+library.addBook(
+  "The Hobbit",
+  "JRR Tolkien",
+  "304",
+  `"The Hobbit" is a timeless
+fantasy novel by J.R.R. Tolkien. It follows the adventure of Bilbo Baggins,
+a humble and unassuming hobbit, who is unexpectedly swept into an epic quest
+by the wizard Gandalf and a group of dwarves. Their mission: to reclaim a lost
+dwarf kingdom and its treasure from the fearsome dragon Smaug. Along the journey,
+Bilbo encounters many trials and creatures of Middle-Earth, and discovers his own
+unexpected bravery and cunning. It's a story of adventure, friendship, and
+personal growth in a world filled with magic and mystery.`,
+  true
+);
 
-  // add delete button
-  const deleteButton = document.createElement("button");
-  deleteButton.classList.add("delete-book");
-  deleteButton.id = book.id;
-  const deleteButtonSpan = document.createElement("span");
-  deleteButtonSpan.textContent = "-";
-  deleteButton.appendChild(deleteButtonSpan);
-  bookCard.appendChild(deleteButton);
-  deleteButton.addEventListener("click", () => {
-    deleteBookCard(deleteButton.id);
-    updateSideBar();
-  });
-
-  // add title info
-  const title = document.createElement("p");
-  title.classList.add("title");
-  title.textContent = book.title;
-  bookCard.appendChild(title);
-
-  // add author info
-  const author = document.createElement("p");
-  author.classList.add("author");
-  author.textContent = `By ${book.author}`;
-  bookCard.appendChild(author);
-
-  // add pages info
-  const pages = document.createElement("p");
-  pages.classList.add("pages");
-  pages.textContent = `Page Count: ${book.pages}`;
-  bookCard.appendChild(pages);
-
-  // add summary header
-  const summaryHeader = document.createElement("p");
-  summaryHeader.classList.add("summary-title");
-  summaryHeader.textContent = "Summary";
-  bookCard.appendChild(summaryHeader);
-
-  // add summary info
-  const summary = document.createElement("p");
-  summary.classList.add("summary");
-  summary.textContent = book.summary;
-  bookCard.appendChild(summary);
-
-  const booksContainer = document.getElementById("books-container");
-  booksContainer.appendChild(bookCard);
-}
-
-function Book(id, title, author, pages, summary, read = false) {
-  this.id = id;
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.summary = summary;
-  this.read = read;
-}
-
-Book.prototype.addBook = function () {
-  books.push(this);
-  addBookCard(this);
-  updateSideBar();
-};
-
-const modal = document.querySelector(".add-book-modal");
-modal.addEventListener("click", () => {
-  modal.style.display = "none";
-});
-
-const bookInfo = document.querySelector(".book-info");
-bookInfo.addEventListener("click", (e) => {
-  e.stopPropagation();
-});
-
-const clearLibraryButton = document.querySelector("#clear-library");
-clearLibraryButton.addEventListener("click", () => {
-  clearLibrary();
-  updateSideBar();
-});
-
-const addBookButton = document.querySelector("#add-book");
-addBookButton.addEventListener("click", () => {
-  modal.style.display = "block";
-});
-
-const form = document.querySelector("form");
-
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const title = document.getElementById("title").value;
-  const author = document.getElementById("author").value;
-  const pages = document.getElementById("pages").value;
-  const summary = document.getElementById("summary").value;
-  let read = document.getElementById("read").value;
-  read = read === "on";
-  let id = books.length;
-  // eslint-disable-next-line no-loop-func
-  while (books.some((book) => book.id === id)) {
-    id += 1;
-  }
-
-  const inputs = document.querySelectorAll("input");
-  inputs.forEach((input) => {
-    // eslint-disable-next-line no-param-reassign
-    input.value = "";
-  });
-  modal.style.display = "none";
-  console.log(id, title, author, pages, summary, read);
-  const book = new Book(id, title, author, pages, summary, read);
-  book.addBook();
-});
-
-function addPlaceholderBook() {
-  const hobbit = new Book(
-    0,
-    "The Hobbit",
-    "J.R.R Tolkien",
-    "304",
-    `'The Hobbit' is a timeless fantasy novel by J.R.R. Tolkien. It
-    follows the adventure of Bilbo Baggins, a humble and unassuming
-    hobbit, who is unexpectedly swept into an epic quest by the wizard
-    Gandalf and a group of dwarves. Their mission: to reclaim a lost
-    dwarf kingdom and its treasure from the fearsome dragon Smaug.
-    Along the journey, Bilbo encounters many trials and creatures of
-    Middle-Earth, and discovers his own unexpected bravery and
-    cunning. It's a story of adventure, friendship, and personal
-    growth in a world filled with magic and mystery.`,
-    true
-  );
-  hobbit.addBook();
-}
-
-addPlaceholderBook();
+library.addBook(
+  "The Hobbit",
+  "JRR Tolkien",
+  "304",
+  `"The Hobbit" is a timeless
+fantasy novel by J.R.R. Tolkien. It follows the adventure of Bilbo Baggins,
+a humble and unassuming hobbit, who is unexpectedly swept into an epic quest
+by the wizard Gandalf and a group of dwarves. Their mission: to reclaim a lost
+dwarf kingdom and its treasure from the fearsome dragon Smaug. Along the journey,
+Bilbo encounters many trials and creatures of Middle-Earth, and discovers his own
+unexpected bravery and cunning. It's a story of adventure, friendship, and
+personal growth in a world filled with magic and mystery.`,
+  true
+);
