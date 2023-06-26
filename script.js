@@ -254,18 +254,3 @@ unexpected bravery and cunning. It's a story of adventure, friendship, and
 personal growth in a world filled with magic and mystery.`,
   true
 );
-
-library.addBook(
-  "The Hobbit",
-  "JRR Tolkien",
-  "304",
-  `"The Hobbit" is a timeless
-fantasy novel by J.R.R. Tolkien. It follows the adventure of Bilbo Baggins,
-a humble and unassuming hobbit, who is unexpectedly swept into an epic quest
-by the wizard Gandalf and a group of dwarves. Their mission: to reclaim a lost
-dwarf kingdom and its treasure from the fearsome dragon Smaug. Along the journey,
-Bilbo encounters many trials and creatures of Middle-Earth, and discovers his own
-unexpected bravery and cunning. It's a story of adventure, friendship, and
-personal growth in a world filled with magic and mystery.`,
-  false
-);
